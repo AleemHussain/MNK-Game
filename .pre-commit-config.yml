@@ -1,0 +1,32 @@
+repos:
+  - repo: https://github.com/psf/black
+    rev: 24.2.0  # Use the latest stable version
+    hooks:
+      - id: black
+
+  - repo: https://github.com/PyCQA/flake8
+    rev: 6.1.0  # Use the latest stable version
+    hooks:
+      - id: flake8
+        args: ["--max-line-length=88"]
+
+  - repo: https://github.com/pre-commit/mirrors-mypy
+    rev: v1.8.0  # Use the latest stable version
+    hooks:
+      - id: mypy
+
+  - repo: https://github.com/PyCQA/pylint
+    rev: v3.0.2  # Use the latest stable version
+    hooks:
+      - id: pylint
+        args: ["--disable=C0114"]  # Disable missing module docstring warning
+
+  - repo: https://github.com/pre-commit/pre-commit-hooks
+    rev: v4.5.0  # Use the latest stable version
+    hooks:
+      - id: trailing-whitespace  # Removes trailing spaces
+      - id: end-of-file-fixer  # Ensures a newline at end of files
+      - id: check-yaml  # Validates YAML syntax
+      - id: check-json  # Validates JSON files
+      - id: check-merge-conflict  # Prevents committing unresolved merge conflicts
+
