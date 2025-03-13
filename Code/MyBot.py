@@ -1,4 +1,8 @@
 from Player import Player
 
-class MyBot:
+class MyBot(Player):
+
+    def make_move():
+        pass
+
     pass
