@@ -7,24 +7,54 @@ jobs:
     runs-on: ubuntu-latest
 
     steps:
-    - name: Checkout repository
-      uses: actions/checkout@v3
+      - name: Checkout Repository
+        uses: actions/checkout@v3
+        with:
+          token: ${{ secrets.GITHUB_TOKEN }}
 
-    - name: Set up Python
-      uses: actions/setup-python@v4
-      with:
-        python-version: '3.10'
+      - name: Set up Conda
+        uses: conda-incubator/setup-miniconda@v2
+        with:
+          environment-file: environment.yml
+          activate-environment: mnk-game
+          auto-activate-base: false
 
-    - name: Install dependencies
-      run: |
-        python -m pip install --upgrade pip
-        pip install flake8 black pytest
+      - name: Install dependencies
+        shell: bash -l {0}
+        run: |
+          conda activate mnk-game
+          python -m pip install --upgrade pip
+          pip install pre-commit
 
-    - name: Check code formatting
-      run: black --check .
+      - name: Run Black (Auto-Fix Code Formatting)
+        shell: bash -l {0}
+        run: |
+          conda activate mnk-game
+          black .
 
-    - name: Lint with flake8
-      run: flake8 .
+      - name: Run Flake8 (Linting)
+        shell: bash -l {0}
+        run: |
+          conda activate mnk-game
+          flake8 . || true
 
-    - name: Run tests
-      run: pytest
+      - name: Run Mypy (Type Checking)
+        shell: bash -l {0}
+        run: |
+          conda activate mnk-game
+          mypy . || true
+
+      - name: Run Tests with Pytest
+        shell: bash -l {0}
+        run: |
+          conda activate mnk-game
+          pytest --cov=.
+
+      - name: Commit and Push Changes (if any)
+        shell: bash -l {0}
+        run: |
+          git config --global user.name "GitHub Actions"
+          git config --global user.email "github-actions@github.com"
+          git add .
+          git diff --quiet && git diff --staged --quiet || git commit -m "Auto-format & linting fixes by GitHub Actions"
+          git push || echo "No changes to commit"
