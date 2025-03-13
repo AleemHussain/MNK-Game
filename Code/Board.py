@@ -11,4 +11,7 @@ class Board:
     def display(self):
         pass
 
+    def has_won(self):
+        pass
+
     pass
