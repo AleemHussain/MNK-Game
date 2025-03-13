@@ -1,0 +1,25 @@
+name: mnk-game
+channels:
+  - defaults
+  - conda-forge
+dependencies:
+  - python=3.9
+  - numpy
+  - pandas
+  - matplotlib
+  - scipy
+  - scikit-learn
+  - tensorflow
+  - pytorch
+  - torchvision
+  - pytest
+  - flake8
+  - pylint
+  - black
+  - pip
+  - pip:
+      - gym
+      - pygame
+      - tqdm
+      - pytest-cov
+      - mypy
