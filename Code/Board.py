@@ -1,8 +1,9 @@
 import numpy as np
 
+
 class Board:
     """
-    Represents the game board. It holds the grid and provides methods to display 
+    Represents the game board. It holds the grid and provides methods to display
     and check for winning conditions.
     """
 
@@ -51,7 +52,9 @@ class Board:
 
         # Check main and anti-diagonal (↘ and ↙)
         for d in range(-self.m + 1, self.n):
-            if check_line(self.array.diagonal(d)) or check_line(np.fliplr(self.array).diagonal(d)):
+            if check_line(self.array.diagonal(d)) or check_line(
+                np.fliplr(self.array).diagonal(d)
+            ):
                 return True
 
         return False
