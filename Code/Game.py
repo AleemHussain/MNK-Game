@@ -37,71 +37,63 @@ class Game:
             # Check if the current player has won
             if self.board.has_won(row, col, current_player.number):
                 self.board.display()
-                print(f"{current_player.name} has won!")
+                print(f"{current_player.name} wins!")
                 return
 
             # Switch player
-            current_player = (
-                self.player2 if current_player == self.player1 else self.player1
-            )
+            current_player = self.player2 if current_player == self.player1 else self.player1
             move_count += 1
 
         # If no winner and board is full, it's a draw
         self.board.display()
-        print("The game is a draw!")
+        print("Game ended in a draw.")
 
     def start(self):
-        """
-        Starts the game loop.
-        """
+        """Starts the game loop."""
         self.game_loop()
 
 
-# Game Setup
-print("Welcome to the M,N,K game! To start, please enter the following:")
-m = int(input("Number of rows: "))
-n = int(input("Number of columns: "))
-k = int(input("Winning condition (k): "))
+def welcome_screen():
+    print("\n ------------------------------")
+    print("|                              |")
+    print("|         M,N,K GAME           |")
+    print("|                              |")
+    print(" ------------------------------\n")
 
-# Select Game Mode
-print("Select Game Mode: \n1. Player vs Player \n2. Player vs Bot \n3. Bot vs Bot")
-game_mode = input("Enter mode (1/2/3): ")
+    print("Game Setup:")
+    m = int(input("Rows: "))
+    n = int(input("Columns: "))
+    k = int(input("Winning condition (k): "))
 
-if game_mode == "1":
-    player1_name = input("Player 1, enter your name: ")
-    player1 = Player(player1_name, 1, 0)
+    print("\nGame Modes:")
+    print("1 - Player vs Player")
+    print("2 - Player vs Bot")
+    print("3 - Bot vs Bot")
+    
+    game_mode = input("Choose mode (1/2/3): ")
 
-    player2_name = input("Player 2, enter your name: ")
-    player2 = Player(player2_name, 2, 0)
+    if game_mode == "1":
+        player1 = Player(input("Player 1 name: "), 1, 0)
+        player2 = Player(input("Player 2 name: "), 2, 0)
 
-elif game_mode == "2":
-    player1_name = input("Player 1, enter your name: ")
-    player1 = Player(player1_name, 1, 0)
+    elif game_mode == "2":
+        player1 = Player(input("Player name: "), 1, 0)
+        bot_level = int(input("Bot difficulty (1 - Easy, 2 - Medium, 3 - Hard): "))
+        player2 = MyBot(f"Bot Level {bot_level}", 2, bot_level)
 
-    bot_level = int(
-        input("Select bot level: \n1. Random Bot \n2. Level 2 Bot \n3. Level 3 Bot\n")
-    )
-    player2 = MyBot(f"Bot Level {bot_level}", 2, bot_level)
+    elif game_mode == "3":
+        bot1_level = int(input("First bot difficulty (1 - Easy, 2 - Medium, 3 - Hard): "))
+        bot2_level = int(input("Second bot difficulty (1 - Easy, 2 - Medium, 3 - Hard): "))
+        player1 = MyBot(f"Bot Level {bot1_level}", 1, bot1_level)
+        player2 = MyBot(f"Bot Level {bot2_level}", 2, bot2_level)
 
-elif game_mode == "3":
-    bot1_level = int(
-        input(
-            "Select first bot level: \n1. Random Bot \n2. Level 2 Bot \n3. Level 3 Bot\n"
-        )
-    )
-    player1 = MyBot(f"Bot Level {bot1_level}", 1, bot1_level)
+    else:
+        print("Invalid selection. Exiting.")
+        exit()
 
-    bot2_level = int(
-        input(
-            "Select second bot level: \n1. Random Bot \n2. Level 2 Bot \n3. Level 3 Bot\n"
-        )
-    )
-    player2 = MyBot(f"Bot Level {bot2_level}", 2, bot2_level)
+    game = Game(m, n, k, player1, player2)
+    game.start()
 
-else:
-    print("Invalid choice. Exiting the game.")
-    exit()
 
-# Start Game
-game = Game(m, n, k, player1, player2)
-game.start()
+if __name__ == "__main__":
+    welcome_screen()
