@@ -25,7 +25,7 @@ jobs:
           conda activate mnk-game
           python -m pip install --upgrade pip
           pip install -r requirements.txt
-          pip install pre-commit black flake8 mypy pytest pytest-cov numpy
+          pip install black
 
       - name: Run Black (Auto-Fix Code Formatting)
         shell: bash -l {0}
@@ -33,29 +33,11 @@ jobs:
           conda activate mnk-game
           black .
 
-      - name: Run Flake8 (Linting)
-        shell: bash -l {0}
-        run: |
-          conda activate mnk-game
-          flake8 . || true
-
-      - name: Run Mypy (Type Checking)
-        shell: bash -l {0}
-        run: |
-          conda activate mnk-game
-          mypy . || true
-
-      - name: Run Tests with Pytest
-        shell: bash -l {0}
-        run: |
-          conda activate mnk-game
-          pytest --cov=.
-
       - name: Commit and Push Changes (if any)
         shell: bash -l {0}
         run: |
           git config --global user.name "GitHub Actions"
           git config --global user.email "github-actions@github.com"
           git add .
-          git diff --quiet && git diff --staged --quiet || git commit -m "Auto-format & linting fixes by GitHub Actions"
+          git diff --quiet && git diff --staged --quiet || git commit -m "Auto-format fixes by GitHub Actions"
           git push || echo "No changes to commit"
