@@ -19,12 +19,11 @@ jobs:
           activate-environment: mnk-game
           auto-activate-base: false
 
-      - name: Install dependencies
+      - name: Install Black (Code Formatter)
         shell: bash -l {0}
         run: |
           conda activate mnk-game
           python -m pip install --upgrade pip
-          pip install -r requirements.txt
           pip install black
 
       - name: Run Black (Auto-Fix Code Formatting)
