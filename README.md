@@ -1,13 +1,5 @@
 # MNK-Game
 
-## Projektbeschreibung
-Das MNK-Game ist eine Implementierung eines strategischen Brettspiels, das mithilfe objektorientierter Programmierung (OOP) entwickelt wurde. Das Projekt wurde im Rahmen der Veranstaltung "Programmierung für Data Science und Künstliche Intelligenz" erstellt.
-
-## Team
-- **Ibrahim**: Spielregeln, Projektablauf, Data-Science-Teil, Ausblick
-- **Fouad**: Funktionsweise des Spiels
-- **Aleem**: KI-Bots
-
 ## Projektstruktur
 Das Spiel basiert auf mehreren Klassen, die die Kernfunktionen realisieren:
 
