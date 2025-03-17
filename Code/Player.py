@@ -17,14 +17,14 @@ class Player:
 
         while True:
             try:
-                row = int(input(f"{self.name}, choose a row (1-{board.m}): ")) - 1
-                col = int(input(f"{self.name}, choose a column (1-{board.n}): ")) - 1
+                row = int(input(f"{self.name}, choose a row (1-{board.rows}): ")) - 1  # Fixed board.m → board.rows
+                col = int(input(f"{self.name}, choose a column (1-{board.cols}): ")) - 1  # Fixed board.n → board.cols
 
                 # Validate the input
                 if (
-                    0 <= row < board.m
-                    and 0 <= col < board.n
-                    and board.array[row, col] == 0
+                    0 <= row < board.rows
+                    and 0 <= col < board.cols
+                    and board.grid[row, col] == 0  # Fixed board.array → board.grid
                 ):
                     return row, col
                 else:

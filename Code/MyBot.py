@@ -1,4 +1,4 @@
-from Code.Player import Player
+from Player import Player
 import random
 import numpy as np
 
