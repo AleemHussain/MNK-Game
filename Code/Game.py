@@ -8,8 +8,8 @@ class Game:
     This class represents the game logic. It initializes a board and two players.
     """
 
-    def __init__(self, m, n, k, player1, player2):
-        self.board = Board(m, n, k)
+    def __init__(self, rows, cols, k, player1, player2):
+        self.board = Board(rows, cols, k)
         self.player1 = player1
         self.player2 = player2
 
@@ -19,7 +19,7 @@ class Game:
         """
         current_player = self.player1
         move_count = 0
-        total_moves = self.board.m * self.board.n
+        total_moves = self.board.rows * self.board.cols  # Fixed attribute names
 
         while move_count < total_moves:
             self.board.display()
@@ -32,10 +32,10 @@ class Game:
             else:
                 row, col = current_player.make_move(current_player.number, self.board)
 
-            self.board.array[row, col] = current_player.number
+            self.board.grid[row, col] = current_player.number  # Fixed `array` → `grid`
 
             # Check if the current player has won
-            if self.board.has_won(row, col, current_player.number):
+            if self.board.has_won(current_player.number):  # Fixed call
                 self.board.display()
                 print(f"{current_player.name} wins!")
                 return
@@ -63,8 +63,8 @@ def welcome_screen():
     print(" ------------------------------\n")
 
     print("Game Setup:")
-    m = int(input("\t  Rows: "))
-    n = int(input("\t  Columns: "))
+    rows = int(input("\t  Rows: "))  # Fixed `m` → `rows`
+    cols = int(input("\t  Columns: "))  # Fixed `n` → `cols`
     k = int(input("\t  Winning condition (k): "))
 
     print("\nGame Modes:")
@@ -97,7 +97,7 @@ def welcome_screen():
         print("Invalid selection. Exiting.")
         exit()
 
-    game = Game(m, n, k, player1, player2)
+    game = Game(rows, cols, k, player1, player2)  # Fixed `m, n` → `rows, cols`
     game.start()
 
 

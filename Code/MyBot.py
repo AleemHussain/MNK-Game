@@ -15,9 +15,9 @@ class MyBot(Player):
     def make_move(self, current_player, board, mode):
         available_moves = [
             (row, col)
-            for row in range(board.m)
-            for col in range(board.n)
-            if board.array[row, col] == 0
+            for row in range(board.rows)  # Fixed `board.m` → `board.rows`
+            for col in range(board.cols)  # Fixed `board.n` → `board.cols`
+            if board.grid[row, col] == 0  # Fixed `board.array` → `board.grid`
         ]
 
         if not available_moves:
@@ -28,24 +28,24 @@ class MyBot(Player):
 
         # Mode 2: Try to win OR block opponent's win
         for row, col in available_moves:
-            board.array[row, col] = current_player
-            if board.has_won(row, col, current_player):
-                board.array[row, col] = 0  # Undo move
+            board.grid[row, col] = current_player
+            if board.has_won(current_player):  # Adjusted to new `has_won()`
+                board.grid[row, col] = 0  # Undo move
                 return row, col
-            board.array[row, col] = 0  # Undo move
+            board.grid[row, col] = 0  # Undo move
 
         # Block opponent's immediate win
         opponent = 1 if current_player == 2 else 2
         for row, col in available_moves:
-            board.array[row, col] = opponent
-            if board.has_won(row, col, opponent):
-                board.array[row, col] = 0  # Undo move
+            board.grid[row, col] = opponent
+            if board.has_won(opponent):
+                board.grid[row, col] = 0  # Undo move
                 return row, col
-            board.array[row, col] = 0  # Undo move
+            board.grid[row, col] = 0  # Undo move
 
         # Mode 3: Advanced Minimax AI
         if mode == 3:
-            empty_spaces = sum(sum(board.array == 0))
+            empty_spaces = sum(sum(board.grid == 0))  # Fixed `board.array` → `board.grid`
             depth = self.get_dynamic_depth(empty_spaces)
             _, best_move = self.minimax(
                 board, current_player, True, -np.inf, np.inf, depth
@@ -67,9 +67,9 @@ class MyBot(Player):
         opponent = 1 if player == 2 else 2
         available_moves = [
             (row, col)
-            for row in range(board.m)
-            for col in range(board.n)
-            if board.array[row, col] == 0
+            for row in range(board.rows)  # Fixed `board.m` → `board.rows`
+            for col in range(board.cols)  # Fixed `board.n` → `board.cols`
+            if board.grid[row, col] == 0  # Fixed `board.array` → `board.grid`
         ]
 
         if depth == 0 or not available_moves:
@@ -79,12 +79,12 @@ class MyBot(Player):
             best_value = -np.inf
             best_move = None
             for row, col in available_moves:
-                board.array[row, col] = player
-                if board.has_won(row, col, player):
-                    board.array[row, col] = 0
+                board.grid[row, col] = player
+                if board.has_won(player):
+                    board.grid[row, col] = 0
                     return 10000, (row, col)  # Immediate win
                 value, _ = self.minimax(board, opponent, False, alpha, beta, depth - 1)
-                board.array[row, col] = 0  # Undo move
+                board.grid[row, col] = 0  # Undo move
 
                 if value > best_value:
                     best_value, best_move = value, (row, col)
@@ -98,12 +98,12 @@ class MyBot(Player):
             best_value = np.inf
             best_move = None
             for row, col in available_moves:
-                board.array[row, col] = opponent
-                if board.has_won(row, col, opponent):
-                    board.array[row, col] = 0
+                board.grid[row, col] = opponent
+                if board.has_won(opponent):
+                    board.grid[row, col] = 0
                     return -10000, (row, col)  # Immediate loss
                 value, _ = self.minimax(board, player, True, alpha, beta, depth - 1)
-                board.array[row, col] = 0  # Undo move
+                board.grid[row, col] = 0  # Undo move
 
                 if value < best_value:
                     best_value, best_move = value, (row, col)
@@ -119,19 +119,19 @@ class MyBot(Player):
         score = 0
 
         # Center Control
-        center_col = board.n // 2
-        center_row = board.m // 2
-        if board.array[center_row, center_col] == player:
+        center_col = board.cols // 2  # Fixed `board.n` → `board.cols`
+        center_row = board.rows // 2  # Fixed `board.m` → `board.rows`
+        if board.grid[center_row, center_col] == player:
             score += 50
-        elif board.array[center_row, center_col] == opponent:
+        elif board.grid[center_row, center_col] == opponent:
             score -= 50
 
         # Winning & Blocking Moves
-        for row in range(board.m):
-            for col in range(board.n):
-                if board.array[row, col] == player:
+        for row in range(board.rows):  # Fixed `board.m` → `board.rows`
+            for col in range(board.cols):  # Fixed `board.n` → `board.cols`
+                if board.grid[row, col] == player:
                     score += self.count_potential_wins(board, row, col, player)
-                elif board.array[row, col] == opponent:
+                elif board.grid[row, col] == opponent:
                     score -= self.count_potential_wins(board, row, col, opponent)
 
         return score
@@ -143,8 +143,8 @@ class MyBot(Player):
         winning_potential = 50  # Reward for almost winning
 
         # Horizontal check
-        if col <= board.n - board.k:
-            segment = board.array[row, col : col + board.k]
+        if col <= board.cols - board.k:  # Fixed `board.n` → `board.cols`
+            segment = board.grid[row, col : col + board.k]  # Fixed `board.array` → `board.grid`
             if (
                 np.count_nonzero(segment == player) == board.k - 1
                 and np.count_nonzero(segment == 0) == 1
@@ -157,8 +157,8 @@ class MyBot(Player):
                 score -= winning_potential
 
         # Vertical check
-        if row <= board.m - board.k:
-            segment = board.array[row : row + board.k, col]
+        if row <= board.rows - board.k:  # Fixed `board.m` → `board.rows`
+            segment = board.grid[row : row + board.k, col]  # Fixed `board.array` → `board.grid`
             if (
                 np.count_nonzero(segment == player) == board.k - 1
                 and np.count_nonzero(segment == 0) == 1
