@@ -5,18 +5,14 @@ import numpy as np
 
 class MyBot(Player):
     """
-    This class represents an AI bot that inherits from the Player class.
-    The `mode` parameter determines the bot's difficulty level.
+    AI Bot with Minimax & Alpha-Beta Pruning.
+    Difficulty Modes:
+        - Mode 1: Random
+        - Mode 2: Try to win & block
+        - Mode 3: Strong Minimax AI with evaluation
     """
 
     def make_move(self, current_player, board, mode):
-        """
-        Determines the bot's move based on the selected difficulty mode.
-        Mode 1: Random move
-        Mode 2: Try to win
-        Mode 3: Strong Minimax AI with deep evaluation.
-        """
-
         available_moves = [
             (row, col)
             for row in range(board.m)
@@ -30,7 +26,7 @@ class MyBot(Player):
         if mode == 1:
             return random.choice(available_moves)
 
-        # Mode 2: Try to win immediately
+        # Mode 2: Try to win OR block opponent's win
         for row, col in available_moves:
             board.array[row, col] = current_player
             if board.has_won(row, col, current_player):
@@ -38,12 +34,19 @@ class MyBot(Player):
                 return row, col
             board.array[row, col] = 0  # Undo move
 
+        # Block opponent's immediate win
+        opponent = 1 if current_player == 2 else 2
+        for row, col in available_moves:
+            board.array[row, col] = opponent
+            if board.has_won(row, col, opponent):
+                board.array[row, col] = 0  # Undo move
+                return row, col
+            board.array[row, col] = 0  # Undo move
+
         # Mode 3: Advanced Minimax AI
         if mode == 3:
-            # Determine dynamic depth (increases depth as the board fills)
             empty_spaces = sum(sum(board.array == 0))
-            depth = 6 if empty_spaces > 10 else 8  # Adjust based on game phase
-
+            depth = self.get_dynamic_depth(empty_spaces)
             _, best_move = self.minimax(
                 board, current_player, True, -np.inf, np.inf, depth
             )
@@ -51,11 +54,16 @@ class MyBot(Player):
 
         return random.choice(available_moves)
 
+    def get_dynamic_depth(self, empty_spaces):
+        """Dynamically adjust depth based on game phase."""
+        if empty_spaces > 12:
+            return 4  # Early game
+        elif empty_spaces > 6:
+            return 6  # Mid-game
+        else:
+            return 8  # Endgame (higher depth)
+
     def minimax(self, board, player, maximizing, alpha, beta, depth):
-        """
-        Minimax algorithm with Alpha-Beta pruning and strategic heuristics.
-        Looks ahead multiple moves to make the best decision.
-        """
         opponent = 1 if player == 2 else 2
         available_moves = [
             (row, col)
@@ -106,61 +114,60 @@ class MyBot(Player):
             return best_value, best_move
 
     def evaluate_board(self, board, player):
-        """
-        Heuristic evaluation for board state.
-        Assigns points based on positioning, winning potential, and blocking threats.
-        """
+        """Improved heuristic evaluation with winning potential detection."""
         opponent = 1 if player == 2 else 2
         score = 0
 
-        # 1. **Center Control (Highest Priority)**
+        # Center Control
         center_col = board.n // 2
         center_row = board.m // 2
-        center_bonus = 50
         if board.array[center_row, center_col] == player:
-            score += center_bonus
+            score += 50
         elif board.array[center_row, center_col] == opponent:
-            score -= center_bonus
+            score -= 50
 
-        # 2. **Winning & Blocking Moves**
+        # Winning & Blocking Moves
         for row in range(board.m):
-            if sum(board.array[row, :] == player) >= board.k - 1:
-                score += 100  # Almost winning row
-            if sum(board.array[:, row] == player) >= board.k - 1:
-                score += 100  # Almost winning column
+            for col in range(board.n):
+                if board.array[row, col] == player:
+                    score += self.count_potential_wins(board, row, col, player)
+                elif board.array[row, col] == opponent:
+                    score -= self.count_potential_wins(board, row, col, opponent)
 
-        for row in range(board.m):
-            if sum(board.array[row, :] == opponent) >= board.k - 1:
-                score -= 120  # Opponent close to winning
-            if sum(board.array[:, row] == opponent) >= board.k - 1:
-                score -= 120  # Opponent close to winning
+        return score
 
-        # 3. **Forks (Two Winning Moves at Once)**
-        fork_bonus = 150
-        for row, col in zip(range(board.m), range(board.n)):  # Check diagonals
-            if board.array[row, col] == player:
-                score += fork_bonus
-            if board.array[row, col] == opponent:
-                score -= fork_bonus
+    def count_potential_wins(self, board, row, col, player):
+        """Counts how close a player is to winning in a given position."""
+        opponent = 1 if player == 2 else 2
+        score = 0
+        winning_potential = 50  # Reward for almost winning
 
-        # 4. **Chain Building (Preparing for Wins)**
-        chain_bonus = 30
-        for row in range(board.m):
-            for col in range(board.n - board.k + 1):
-                segment = board.array[row, col : col + board.k]
-                if (
-                    np.count_nonzero(segment == player) == board.k - 2
-                    and np.count_nonzero(segment == 0) == 2
-                ):
-                    score += chain_bonus  # Two in a row with space for more
+        # Horizontal check
+        if col <= board.n - board.k:
+            segment = board.array[row, col : col + board.k]
+            if (
+                np.count_nonzero(segment == player) == board.k - 1
+                and np.count_nonzero(segment == 0) == 1
+            ):
+                score += winning_potential
+            elif (
+                np.count_nonzero(segment == opponent) == board.k - 1
+                and np.count_nonzero(segment == 0) == 1
+            ):
+                score -= winning_potential
 
-        for col in range(board.n):
-            for row in range(board.m - board.k + 1):
-                segment = board.array[row : row + board.k, col]
-                if (
-                    np.count_nonzero(segment == player) == board.k - 2
-                    and np.count_nonzero(segment == 0) == 2
-                ):
-                    score += chain_bonus
+        # Vertical check
+        if row <= board.m - board.k:
+            segment = board.array[row : row + board.k, col]
+            if (
+                np.count_nonzero(segment == player) == board.k - 1
+                and np.count_nonzero(segment == 0) == 1
+            ):
+                score += winning_potential
+            elif (
+                np.count_nonzero(segment == opponent) == board.k - 1
+                and np.count_nonzero(segment == 0) == 1
+            ):
+                score -= winning_potential
 
         return score

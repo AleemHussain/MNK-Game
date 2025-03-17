@@ -41,7 +41,9 @@ class Game:
                 return
 
             # Switch player
-            current_player = self.player2 if current_player == self.player1 else self.player1
+            current_player = (
+                self.player2 if current_player == self.player1 else self.player1
+            )
             move_count += 1
 
         # If no winner and board is full, it's a draw
@@ -69,7 +71,7 @@ def welcome_screen():
     print("\t  1 - Player vs Player")
     print("\t  2 - Player vs Bot")
     print("\t  3 - Bot vs Bot")
-    
+
     game_mode = input("\t  Choose mode (1/2/3): ")
 
     if game_mode == "1":
@@ -82,8 +84,12 @@ def welcome_screen():
         player2 = MyBot(f"Bot Level {bot_level}", 2, bot_level)
 
     elif game_mode == "3":
-        bot1_level = int(input("First bot difficulty (1 - Easy, 2 - Medium, 3 - Hard): "))
-        bot2_level = int(input("Second bot difficulty (1 - Easy, 2 - Medium, 3 - Hard): "))
+        bot1_level = int(
+            input("First bot difficulty (1 - Easy, 2 - Medium, 3 - Hard): ")
+        )
+        bot2_level = int(
+            input("Second bot difficulty (1 - Easy, 2 - Medium, 3 - Hard): ")
+        )
         player1 = MyBot(f"Bot Level {bot1_level}", 1, bot1_level)
         player2 = MyBot(f"Bot Level {bot2_level}", 2, bot2_level)
 
