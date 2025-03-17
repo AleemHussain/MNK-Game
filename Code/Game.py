@@ -61,16 +61,16 @@ def welcome_screen():
     print(" ------------------------------\n")
 
     print("Game Setup:")
-    m = int(input("Rows: "))
-    n = int(input("Columns: "))
-    k = int(input("Winning condition (k): "))
+    m = int(input("\t  Rows: "))
+    n = int(input("\t  Columns: "))
+    k = int(input("\t  Winning condition (k): "))
 
     print("\nGame Modes:")
-    print("1 - Player vs Player")
-    print("2 - Player vs Bot")
-    print("3 - Bot vs Bot")
+    print("\t  1 - Player vs Player")
+    print("\t  2 - Player vs Bot")
+    print("\t  3 - Bot vs Bot")
     
-    game_mode = input("Choose mode (1/2/3): ")
+    game_mode = input("\t  Choose mode (1/2/3): ")
 
     if game_mode == "1":
         player1 = Player(input("Player 1 name: "), 1, 0)
