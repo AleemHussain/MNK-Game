@@ -19,12 +19,12 @@ jobs:
           activate-environment: mnk-game
           auto-activate-base: false
 
-      - name: Install Black (Code Formatter)
+      - name: Install Dependencies
         shell: bash -l {0}
         run: |
           conda activate mnk-game
           python -m pip install --upgrade pip
-          pip install black
+          pip install black pytest
 
       - name: Run Black (Auto-Fix Code Formatting)
         shell: bash -l {0}
@@ -40,3 +40,9 @@ jobs:
           git add .
           git diff --quiet && git diff --staged --quiet || git commit -m "Auto-format fixes by GitHub Actions"
           git push || echo "No changes to commit"
+
+      - name: Run Tests with pytest
+        shell: bash -l {0}
+        run: |
+          conda activate mnk-game
+          pytest --tb=short --disable-warnings
