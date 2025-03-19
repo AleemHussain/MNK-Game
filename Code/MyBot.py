@@ -1,7 +1,11 @@
-from Player import Player
+import sys
+import os
 import random
 import numpy as np
 
+sys.path.insert(0, os.path.abspath(os.path.join(os.path.dirname(__file__), "../")))
+
+from Code.Player import Player
 
 class MyBot(Player):
     """

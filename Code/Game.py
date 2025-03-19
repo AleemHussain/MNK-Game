@@ -1,6 +1,11 @@
-from Player import Player
-from Board import Board
-from MyBot import MyBot
+import sys
+import os
+
+sys.path.insert(0, os.path.abspath(os.path.join(os.path.dirname(__file__), "../")))
+
+from Code.Player import Player
+from Code.Board import Board
+from Code.MyBot import MyBot
 
 
 class Game:
