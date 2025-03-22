@@ -1,55 +1,88 @@
 # MNK-Game
 
-## Project Structure
-The game is based on several classes that implement the core functions:
+## Overview  
+MNK is a flexible strategy game similar to Tic-Tac-Toe, where players can define the board size (M × N) and the number of consecutive marks (K) needed to win. The game supports human players and AI-controlled bots with different difficulty levels.
 
-### 1. Board Class
-- Represents the game board as a `numpy` matrix (`np.zeros`).
-- Implements the `has_won` method for checking win conditions.
-- A major challenge was verifying diagonal win conditions.
+## Project Structure  
+The project is structured for clarity, modularity, and testability:
 
-### 2. Player Class
-- Implements player logic.
-- Contains the `make_move` method to check for valid moves.
+```
+├── .github/workflows/
+│   └── basic_ci.yml              # CI/CD workflow configuration
+│
+├── Code/
+│   ├── Board.py                  # Game board logic and win condition checks
+│   ├── Game.py                   # Main game loop and controller
+│   ├── MyBot.py                  # AI bot implementation using Minimax
+│   └── Player.py                 # Base Player class for humans and bots
+│
+├── Tests/
+│   ├── test_Board.py             # Unit tests for Board
+│   ├── test_Game.py              # Unit tests for Game
+│   ├── test_MyBot.py             # Unit tests for MyBot (AI logic)
+│   └── test_Player.py            # Unit tests for Player
+│
+├── .gitignore
+├── .pre-commit-config.yml       # Linting and formatting automation
+├── CODE_OF_CONDUCT.md
+├── LICENSE
+├── README.md
+├── environment.yml              # Conda environment dependencies
+└── pyproject.toml               # Project metadata and dependencies
+```
 
-### 3. Game Class
-- Controls the game flow (player vs. player).
-- Imports and manages other classes.
-- Uses `game_loop` to handle the game flow.
+## Class Descriptions  
 
-### 4. MyBot Class
-This class extends `Player` and represents an AI-controlled player.
-Depending on the difficulty level, the bot uses different strategies:
-- **Easy AI**: Randomly selects a free position.
-- **Medium AI**: Simulates moves to determine if a winning move is possible.
-- **Hard AI**: Not only simulates its own winning moves but also considers the opponent’s potential winning moves.
+### Board  
+- Represents the game board using a NumPy matrix (`np.zeros`).  
+- `has_won` method checks for win conditions (horizontal, vertical, diagonal).  
+- Diagonal detection required custom logic and was one of the trickiest parts.
 
-## Minimax Algorithm
-The **Minimax algorithm** is used in the AI implementation to determine the best possible move. It is a recursive algorithm commonly used in turn-based games like Tic-Tac-Toe, Chess, and MNK-Game. The key principles of Minimax are:
-- The AI assumes that it is playing optimally and that the opponent is also making the best possible moves.
-- The algorithm explores all possible moves, evaluates them, and assigns a score based on whether they lead to a win, loss, or draw.
-- **Minimizing Player (Opponent)**: Tries to minimize the score (avoid losing moves).
-- **Maximizing Player (AI)**: Tries to maximize the score (choose the best move leading to victory).
-- The AI uses a depth-based approach to limit computation time, as deeper searches become increasingly complex.
-- To optimize performance, **alpha-beta pruning** is implemented, which reduces unnecessary calculations by cutting off branches that won’t affect the final decision.
+### Player  
+- Represents a human player.  
+- `make_move` checks move validity and applies it to the board.
 
-## Implementation
-- The game was initially developed without strict OOP principles, which led to issues.
-- It was then restructured with a clear separation of classes and responsibilities.
-- `numpy` was primarily used for board logic, and AI algorithms like `Minimax` were implemented.
+### Game  
+- Main orchestrator of the gameplay.  
+- Imports and connects all other components.  
+- Contains the `game_loop` that manages turn-taking and game flow.
 
-## Requirements
-- Python 3.x
-- `numpy`
+### MyBot  
+- Inherits from `Player` and implements AI logic using different strategies:  
 
-## Usage
-1. Start the game by running the `Game.py` file.
-2. Choose a game mode (human vs. human or human vs. AI or AI vs. AI).
-3. Follow the instructions in the console.
+| Difficulty | Strategy |
+|------------|----------|
+| Easy       | Random move selection |
+| Medium     | Simulates own winning moves |
+| Hard       | Simulates both own and opponent moves using Minimax |
 
-## Future Enhancements
-- Improve AI with more efficient algorithms.
-- Implement a graphical user interface.
-- Expand to an online multiplayer mode.
+## Minimax Algorithm  
+- Recursive algorithm for optimal decision-making in two-player games.  
+- Evaluates all possible game states up to a depth limit.  
+- Alpha-Beta pruning is used to optimize performance.  
+- Difficulty level affects how deep the search goes and how defensive/offensive the bot plays.
+
+## Requirements  
+- Python 3.x  
+- NumPy (install with `pip install numpy`)  
+- Optional: Use `environment.yml` with Conda to install all dependencies
+
+## How to Run  
+1. Navigate to the root of the project directory.  
+2. Run the game from the terminal:  
+   ```bash
+   python Code/Game.py
+   ```  
+3. Follow the command-line prompts to select:  
+   - Human vs. Human  
+   - Human vs. Bot  
+   - Bot vs. Bot
+
+## Testing  
+Run unit tests using:
+
+```bash
+pytest Tests/
+```
 
 ---
