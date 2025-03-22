@@ -1,27 +1,52 @@
-[build-system]
-requires = ["setuptools", "wheel"]
-build-backend = "setuptools.build_meta"
-
 [project]
 name = "mnk-game"
 version = "0.1.0"
-description = "A Python implementation of the MNK-Game with AI support."
+description = "A flexible MNK game (generalized Tic-Tac-Toe) with human and AI players."
 authors = [
-    {name = "Aleem Hussain", email = "aleemhussain2002@gmail.com"}
+    { name="Aleem Hussain, email="aleemhussain2002@gmail.com" }
 ]
+readme = "README.md"
+requires-python = ">=3.9"
+license = {text = "MIT"}
 dependencies = [
     "numpy",
-    "pytest",  # For testing
-    "pygame"  # If you plan to add a GUI
+    "pygame",
+    "tqdm"
 ]
-requires-python = ">=3.8"
-license = {text = "MIT"}
 
-[tool.setuptools]
-packages = ["mnk_game"]
+[project.optional-dependencies]
+dev = [
+    "pytest",
+    "pytest-cov",
+    "flake8",
+    "black",
+    "mypy"
+]
 
 [tool.black]
 line-length = 88
+target-version = ['py39']
+exclude = '''
+/(
+    \.git
+  | \.venv
+  | __pycache__
+  | build
+  | dist
+)/
+'''
+
+[tool.flake8]
+max-line-length = 88
+exclude = .git,__pycache__,build,dist
+extend-ignore = E203, W503
 
 [tool.pytest.ini_options]
-testpaths = ["tests"]
+addopts = "--cov=Code --cov-report=term-missing"
+testpaths = [
+    "Tests"
+]
+
+[build-system]
+requires = ["setuptools>=61.0"]
+build-backend = "setuptools.build_meta"
