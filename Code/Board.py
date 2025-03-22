@@ -1,5 +1,6 @@
 import numpy as np
 
+
 class Board:
     """
     Represents the game board for an MNK game.
@@ -18,7 +19,9 @@ class Board:
         self.rows = rows  # Number of rows
         self.cols = cols  # Number of columns
         self.k = k  # Winning condition (k in a row)
-        self.grid = np.zeros((rows, cols), dtype=int)  # Create an empty board with zeros
+        self.grid = np.zeros(
+            (rows, cols), dtype=int
+        )  # Create an empty board with zeros
 
     def display(self):
         """
@@ -27,7 +30,9 @@ class Board:
         """
         print("\nCurrent Board:")
         for row in self.grid:
-            print(" ".join(str(int(cell)) for cell in row))  # Convert each cell to integer and print
+            print(
+                " ".join(str(int(cell)) for cell in row)
+            )  # Convert each cell to integer and print
         print()
 
     def is_valid_move(self, row, col):
@@ -41,7 +46,9 @@ class Board:
         :param col: Column index of the move.
         :return: True if the move is valid, False otherwise.
         """
-        return 0 <= row < self.rows and 0 <= col < self.cols and self.grid[row, col] == 0
+        return (
+            0 <= row < self.rows and 0 <= col < self.cols and self.grid[row, col] == 0
+        )
 
     def make_move(self, row, col, player_number):
         """
@@ -81,7 +88,9 @@ class Board:
             count = 0  # Counter for consecutive player marks
             for element in line:
                 if element == player_number:
-                    count += 1  # Increment count if the mark matches the player's number
+                    count += (
+                        1  # Increment count if the mark matches the player's number
+                    )
                     if count == self.k:  # If k consecutive marks are found, return True
                         return True
                 else:

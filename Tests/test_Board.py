@@ -26,7 +26,9 @@ class TestBoard(unittest.TestCase):
         Test if the board initializes correctly with the correct shape.
         """
         self.assertEqual(self.board.grid.shape, (3, 3))  # Ensure grid is 3x3
-        self.assertTrue(np.all(self.board.grid == 0))  # Check if all cells are empty (0)
+        self.assertTrue(
+            np.all(self.board.grid == 0)
+        )  # Check if all cells are empty (0)
 
     def test_make_move(self):
         """
@@ -35,7 +37,9 @@ class TestBoard(unittest.TestCase):
         - A move should fail if the cell is already occupied.
         """
         self.assertTrue(self.board.make_move(0, 0, 1))  # Player 1 places move at (0,0)
-        self.assertFalse(self.board.make_move(0, 0, 2))  # Player 2 attempts to place move at (0,0) again
+        self.assertFalse(
+            self.board.make_move(0, 0, 2)
+        )  # Player 2 attempts to place move at (0,0) again
 
     def test_has_won(self):
         """
@@ -59,9 +63,15 @@ class TestBoard(unittest.TestCase):
         Test a draw scenario where no player wins and the board is full.
         """
         moves = [
-            (0, 0, 1), (0, 1, 2), (0, 2, 1),
-            (1, 0, 2), (1, 1, 1), (1, 2, 2),
-            (2, 0, 2), (2, 1, 1), (2, 2, 2),
+            (0, 0, 1),
+            (0, 1, 2),
+            (0, 2, 1),
+            (1, 0, 2),
+            (1, 1, 1),
+            (1, 2, 2),
+            (2, 0, 2),
+            (2, 1, 1),
+            (2, 2, 2),
         ]
         for row, col, player in moves:
             self.board.make_move(row, col, player)
@@ -70,5 +80,6 @@ class TestBoard(unittest.TestCase):
         self.assertFalse(self.board.has_won(2))  # No win for Player 2
         self.assertFalse(np.any(self.board.grid == 0))  # No empty cells (board is full)
 
-if __name__ == '__main__':
+
+if __name__ == "__main__":
     unittest.main()

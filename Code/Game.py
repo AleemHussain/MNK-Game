@@ -36,7 +36,9 @@ class Game:
         """
         current_player = self.player1  # Start with player 1
         move_count = 0  # Track the number of moves made
-        total_moves = self.board.rows * self.board.cols  # Maximum possible moves before a draw
+        total_moves = (
+            self.board.rows * self.board.cols
+        )  # Maximum possible moves before a draw
 
         while move_count < total_moves:
             self.board.display()  # Display the current board state
@@ -47,9 +49,13 @@ class Game:
                     current_player.number, self.board, current_player.mode
                 )  # AI move based on difficulty mode
             else:
-                row, col = current_player.make_move(current_player.number, self.board)  # Human move
+                row, col = current_player.make_move(
+                    current_player.number, self.board
+                )  # Human move
 
-            self.board.grid[row, col] = current_player.number  # Place the player's mark on the board
+            self.board.grid[row, col] = (
+                current_player.number
+            )  # Place the player's mark on the board
 
             # Check if the current player has won
             if self.board.has_won(current_player.number):
@@ -58,7 +64,9 @@ class Game:
                 return
 
             # Switch to the next player
-            current_player = self.player2 if current_player == self.player1 else self.player1
+            current_player = (
+                self.player2 if current_player == self.player1 else self.player1
+            )
             move_count += 1  # Increment move counter
 
         # If all moves are used and no winner, it's a draw
@@ -102,13 +110,19 @@ def welcome_screen():
     elif game_mode == "2":
         # Human vs Bot mode
         player1 = Player(input("Player name: "), 1, 0)
-        bot_level = int(input("Bot difficulty (1 - Easy, 2 - Medium, 3 - Hard): "))  # Choose bot difficulty
+        bot_level = int(
+            input("Bot difficulty (1 - Easy, 2 - Medium, 3 - Hard): ")
+        )  # Choose bot difficulty
         player2 = MyBot(f"Bot Level {bot_level}", 2, bot_level)
 
     elif game_mode == "3":
         # Bot vs Bot mode
-        bot1_level = int(input("First bot difficulty (1 - Easy, 2 - Medium, 3 - Hard): "))
-        bot2_level = int(input("Second bot difficulty (1 - Easy, 2 - Medium, 3 - Hard): "))
+        bot1_level = int(
+            input("First bot difficulty (1 - Easy, 2 - Medium, 3 - Hard): ")
+        )
+        bot2_level = int(
+            input("Second bot difficulty (1 - Easy, 2 - Medium, 3 - Hard): ")
+        )
         player1 = MyBot(f"Bot Level {bot1_level}", 1, bot1_level)
         player2 = MyBot(f"Bot Level {bot2_level}", 2, bot2_level)
 

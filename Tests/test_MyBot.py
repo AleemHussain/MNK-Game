@@ -102,5 +102,6 @@ class TestMyBot(unittest.TestCase):
         move = self.bot.make_move(1, self.board, mode=3)  # Minimax mode
         self.assertEqual(move, (2, 2))  # Bot should block at (2,2)
 
+
 if __name__ == "__main__":
     unittest.main()

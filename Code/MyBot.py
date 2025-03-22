@@ -63,10 +63,14 @@ class MyBot(Player):
         if mode == 3:
             empty_spaces = sum(sum(board.grid == 0))
             depth = self.get_dynamic_depth(empty_spaces)  # Adjust depth dynamically
-            _, best_move = self.minimax(board, current_player, True, -np.inf, np.inf, depth)
+            _, best_move = self.minimax(
+                board, current_player, True, -np.inf, np.inf, depth
+            )
             return best_move
 
-        return random.choice(available_moves)  # Fallback to random if no better move is found
+        return random.choice(
+            available_moves
+        )  # Fallback to random if no better move is found
 
     def get_dynamic_depth(self, empty_spaces):
         """
@@ -189,17 +193,29 @@ class MyBot(Player):
         # Check horizontal segment
         if col <= board.cols - board.k:
             segment = board.grid[row, col : col + board.k]
-            if np.count_nonzero(segment == player) == board.k - 1 and np.count_nonzero(segment == 0) == 1:
+            if (
+                np.count_nonzero(segment == player) == board.k - 1
+                and np.count_nonzero(segment == 0) == 1
+            ):
                 score += winning_potential
-            elif np.count_nonzero(segment == opponent) == board.k - 1 and np.count_nonzero(segment == 0) == 1:
+            elif (
+                np.count_nonzero(segment == opponent) == board.k - 1
+                and np.count_nonzero(segment == 0) == 1
+            ):
                 score -= winning_potential
 
         # Check vertical segment
-        if row <= board.rows - board.k: 
-            segment = board.grid[row : row + board.k, col] 
-            if np.count_nonzero(segment == player) == board.k - 1 and np.count_nonzero(segment == 0) == 1:
+        if row <= board.rows - board.k:
+            segment = board.grid[row : row + board.k, col]
+            if (
+                np.count_nonzero(segment == player) == board.k - 1
+                and np.count_nonzero(segment == 0) == 1
+            ):
                 score += winning_potential
-            elif np.count_nonzero(segment == opponent) == board.k - 1 and np.count_nonzero(segment == 0) == 1:
+            elif (
+                np.count_nonzero(segment == opponent) == board.k - 1
+                and np.count_nonzero(segment == 0) == 1
+            ):
                 score -= winning_potential
 
         return score

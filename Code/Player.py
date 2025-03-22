@@ -1,7 +1,7 @@
 class Player:
     """
     Represents a player in the game.
-    
+
     Attributes:
         name (str): The name of the player.
         number (int): The player's unique number (1 or 2).
@@ -47,6 +47,8 @@ class Player:
                 ):
                     return row, col  # Return valid move
                 else:
-                    print("Invalid move! The field is either out of bounds or already occupied. Try again.")
+                    print(
+                        "Invalid move! The field is either out of bounds or already occupied. Try again."
+                    )
             except ValueError:
                 print("Invalid input! Please enter a valid number.")
